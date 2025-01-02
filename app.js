@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 import {
   login,
+  logout,
   createUser,
   getUser,
   updateUser,
@@ -13,7 +14,7 @@ import {
 import { isUserLogged } from './middlewares/userLogged.js'
 import { isUserSelf } from './middlewares/userSelf.js'
 import { bodyValidator } from './middlewares/validators.js'
-import { userZodSchema } from './lib/zodSchemas.js'
+import { updateUserZodSchema, userZodSchema } from './lib/zodSchemas.js'
 
 export const app = express()
 
@@ -26,11 +27,12 @@ app.use(cors({ origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'https
 
 // USER AUTH
 app.post('/login', bodyValidator({ schema: userZodSchema }), login)
+app.post('/logout', logout)
 // USER CRUD
 app.post('/users', bodyValidator({ schema: userZodSchema }), createUser)
 app.get('/users/:id', isUserLogged, getUser)
 app.delete('/users/:id', isUserLogged, isUserSelf, deleteUser)
-app.put('/users/:id', isUserLogged, isUserSelf, updateUser)
+app.put('/users/:id', isUserLogged, isUserSelf, bodyValidator({ schema: updateUserZodSchema }), updateUser)
 
 // 404 MIDDLEWARE
 app.use((req, res, next) => {

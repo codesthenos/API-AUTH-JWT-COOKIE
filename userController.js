@@ -34,6 +34,19 @@ export const login = async (req, res, next) => {
   }
 }
 
+export const logout = async (req, res, next) => {
+  try {
+    res.clearCookie('jwToken', {
+      httpOnly: true,
+      secure: true
+    })
+
+    res.json({ message: 'Logout successful' })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const createUser = async (req, res, next) => {
   try {
     const { username, password } = req.body
@@ -98,18 +111,20 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    // REVIEW
-    const { userId } = req
+    const { id } = req.params
     const { username, password } = req.body
 
-    const formattedUsername = username.toLowerCase().trim()
-    const hashedPassword = await User.hashPassword({ password })
+    const updatedData = {}
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { username: formattedUsername, password: hashedPassword },
-      { new: true }
-    )
+    if (username) {
+      updatedData.username = username.toLowerCase().trim()
+    }
+
+    if (password) {
+      updatedData.password = await User.hashPassword({ password })
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updatedData, { new: true })
 
     if (!updatedUser) {
       const error = createHttpError(404, 'User not found')

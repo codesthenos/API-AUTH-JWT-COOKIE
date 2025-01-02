@@ -5,7 +5,7 @@ export const isUserSelf = (req, res, next) => {
     const { id } = req.params
 
     if (req.userId !== id) {
-      const error = createHttpError(403, 'Forbidden')
+      const error = createHttpError(403, 'Forbidden, not your profile')
       next(error)
       return
     }

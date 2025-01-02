@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 export const isUserLogged = (req, res, next) => {
   try {
-    const jwToken = req.get('Authorization') || req.query.jwToken || req.body.jwToken
+    const jwToken = req.cookies.jwToken
 
     if (!jwToken) {
       const error = createHttpError(401, 'Token required')

@@ -80,9 +80,9 @@ export const deleteUser = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
   try {
-    const { userId } = req
+    const { id } = req.params
 
-    const user = await User.findById(userId)
+    const user = await User.findById(id)
 
     if (!user) {
       const error = createHttpError(404, 'User not found')

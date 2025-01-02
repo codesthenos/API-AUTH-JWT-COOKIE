@@ -1,9 +1,8 @@
 import createHttpError from 'http-errors'
 import jwt from 'jsonwebtoken'
-import { BackupUser, User } from '../models/userModel.js'
-import { Add, BackupAdd } from '../models/addModel.js'
+import { BackupUser, User } from './userModel.js'
 
-export const loginController = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { username, password } = req.body
 
@@ -20,15 +19,22 @@ export const loginController = async (req, res, next) => {
     const jwToken = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '7d' }
     )
-    res.json({ jwToken })
+
+    res.cookies('jwToken', jwToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7
+    })
+
+    res.json({ userId: user._id })
   } catch (error) {
     next(error)
   }
 }
 
-export const registerController = async (req, res, next) => {
+export const createUser = async (req, res, next) => {
   try {
     const { username, password } = req.body
 
@@ -45,7 +51,7 @@ export const registerController = async (req, res, next) => {
   }
 }
 
-export const deleteUserController = async (req, res, next) => {
+export const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params
 
@@ -66,21 +72,13 @@ export const deleteUserController = async (req, res, next) => {
 
     await User.findByIdAndDelete(id)
 
-    const userAdds = await Add.find({ owner: id })
-
-    const backupAdds = userAdds.map((add) => add.toObject())
-
-    await BackupAdd.insertMany(backupAdds)
-
-    await Add.deleteMany({ owner: id })
-
     res.json({ message: 'User deleted' })
   } catch (error) {
     next(error)
   }
 }
 
-export const getUserController = async (req, res, next) => {
+export const getUser = async (req, res, next) => {
   try {
     const { userId } = req
 
@@ -92,7 +90,34 @@ export const getUserController = async (req, res, next) => {
       return
     }
 
-    res.json({ userId: user._id })
+    res.json({ user })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const updateUser = async (req, res, next) => {
+  try {
+    // REVIEW
+    const { userId } = req
+    const { username, password } = req.body
+
+    const formattedUsername = username.toLowerCase().trim()
+    const hashedPassword = await User.hashPassword({ password })
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { username: formattedUsername, password: hashedPassword },
+      { new: true }
+    )
+
+    if (!updatedUser) {
+      const error = createHttpError(404, 'User not found')
+      next(error)
+      return
+    }
+
+    res.json({ message: 'User updated', user: updatedUser })
   } catch (error) {
     next(error)
   }

@@ -23,7 +23,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(morgan('dev'))
-app.use(cors({ origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'https://codesthenos.github.io'] }))
+app.use(cors({
+  origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'https://codesthenos.github.io'],
+  credentials: true
+}))
 
 // USER AUTH
 app.post('/login', bodyValidator({ schema: userZodSchema }), login)

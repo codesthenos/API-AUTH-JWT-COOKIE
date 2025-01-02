@@ -25,6 +25,7 @@ export const login = async (req, res, next) => {
     res.cookies('jwToken', jwToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 7
     })
 
@@ -38,7 +39,8 @@ export const logout = async (req, res, next) => {
   try {
     res.clearCookie('jwToken', {
       httpOnly: true,
-      secure: true
+      secure: true,
+      sameSite: 'lax'
     })
 
     res.json({ message: 'Logout successful' })

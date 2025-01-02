@@ -22,7 +22,7 @@ export const login = async (req, res, next) => {
       { expiresIn: '7d' }
     )
 
-    res.cookies('jwToken', jwToken, {
+    res.cookie('jwToken', jwToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',

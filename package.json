@@ -1,0 +1,43 @@
+{
+  "name": "api-jwt-auth-cookie",
+  "version": "1.0.0",
+  "description": "users crud with auth using jwt setting a cookie as vanilla as posible using express and mongoose",
+  "keywords": [
+    "express",
+    "auth",
+    "jwt",
+    "cookie",
+    "credentials"
+  ],
+  "homepage": "https://github.com/codesthenos/API-AUTH-JWT-COOKIE#readme",
+  "bugs": {
+    "url": "https://github.com/codesthenos/API-AUTH-JWT-COOKIE/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codesthenos/API-AUTH-JWT-COOKIE.git"
+  },
+  "license": "ISC",
+  "author": "codesthenos - Guillermo Ruiz Arranz",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "cross-env PORT=5555 node --watch server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.3",
+    "morgan": "^1.10.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

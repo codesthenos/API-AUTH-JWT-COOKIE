@@ -1,3 +1,4 @@
+import path from 'node:path'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import createHttpError from 'http-errors'
@@ -19,6 +20,7 @@ import { updateUserZodSchema, userZodSchema } from './lib/zodSchemas.js'
 export const app = express()
 
 // MAIN MIDDLEWARES
+app.use(express.static(path.join(import.meta.dirname, 'public')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
@@ -28,6 +30,10 @@ app.use(cors({
   credentials: true
 }))
 
+// DOCS as HOME
+app.get('/', (req, res, next) => {
+  res.sendFile(path.join(import.meta.dirname, 'public', 'docs.html'))
+})
 // USER AUTH
 app.post('/login', bodyValidator({ schema: userZodSchema }), login)
 app.post('/logout', logout)

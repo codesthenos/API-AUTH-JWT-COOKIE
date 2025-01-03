@@ -13,7 +13,7 @@ try {
   if (port === 5555) console.error(error.message)
 }
 
-server.listen(port, '127.0.0.1')
+server.listen(port, '0.0.0.0')
 
 server.on('error', error => {
   if (port === 5555) console.error(`Failed on start listening in ${port}. ERROR: ${error.message}`)

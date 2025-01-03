@@ -136,7 +136,7 @@ paths:
 
   /users/{id}:
     get:
-      summary: Get user by ID
+      summary: Get user by ID (Protected)
       tags:
         - User Management
       parameters:
@@ -145,6 +145,8 @@ paths:
           required: true
           schema:
             type: string
+      security:
+        - cookieAuth: []
       responses:
         '200':
           description: Successful response
@@ -189,7 +191,7 @@ paths:
                     example: 'Not found error'
 
     put:
-      summary: Update user
+      summary: Update user (Protected, Self Only)
       tags:
         - User Management
       parameters:
@@ -198,6 +200,8 @@ paths:
           required: true
           schema:
             type: string
+      security:
+        - cookieAuth: []
       requestBody:
         required: true
         content:
@@ -278,7 +282,7 @@ paths:
                     example: 'Not found error'
 
     delete:
-      summary: Delete user
+      summary: Delete user (Protected, Self Only)
       tags:
         - User Management
       parameters:
@@ -287,6 +291,8 @@ paths:
           required: true
           schema:
             type: string
+      security:
+        - cookieAuth: []
       responses:
         '200':
           description: User deleted successfully
@@ -328,3 +334,10 @@ paths:
                   error:
                     type: string
                     example: 'Not found error'
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: jwToken

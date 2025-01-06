@@ -5,8 +5,8 @@ info:
   description: API for user authentication and management
 
 servers:
-  - url: http://localhost:5555
-    description: Development server
+  - url: https://api-auth-jwt-cookie.onrender.com/
+    description: Production server
 
 paths:
   /login:
